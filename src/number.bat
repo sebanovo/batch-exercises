@@ -314,3 +314,62 @@ goto :eof
 @REM call :repetir-numero 123 2
 @REM echo %_result%
 @REM goto :eof
+
+rem ordenar un número por burbuja
+:burbujear
+setlocal enabledelayedexpansion
+set /a x=%1
+
+if !x! lss 10 (
+  rem nada
+) else (
+  set /a d=!x! %% 10
+  set /a x=!x! / 10
+  call :burbujear !x!
+  set /a x=!_result!
+  set /a ultimo=!x! %% 10
+
+  if !ultimo! leq !d! (
+    set /a x=!x! * 10
+    set /a x=!x! + !d!
+  ) else (
+    set /a z=!x! %% 10
+    set /a x=!x! / 10
+    set /a x=!x! * 10
+    set /a x=!x! + !d!
+    set /a x=!x! * 10
+    set /a x=!x! + !z!
+  )
+)
+endlocal & set _result=%x%
+goto :eof
+
+
+:bubbleSort
+setlocal enabledelayedexpansion
+set /a x=%1
+
+if !x! lss 10 (
+  rem nada
+) else (
+  call :burbujear !x!
+  set /a x=!_result!
+
+  set /a ultimoDigito=!x! %% 10
+  set /a x=!x! / 10
+
+  call :bubbleSort !x!
+  set /a x=!_result!
+
+  set /a x=!x! * 10
+  set /a x=!x! + !ultimoDigito!
+)
+endlocal & set _result=%x%
+goto :eof
+
+
+
+:main
+
+call :bubbleSort 54321
+echo Numero ordenado: %_result%
